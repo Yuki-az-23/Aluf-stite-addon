@@ -1,0 +1,66 @@
+<!-- Category Selector Component Template -->
+<div class="category-selector" id="category-selector">
+  <div class="category-selector__header">
+    <h2 class="category-selector__title">בחר רכיבים למחשב שלך</h2>
+    <p class="category-selector__subtitle">בחר רכיב מכל קטגוריה לבניית התצורה המושלמת</p>
+  </div>
+
+  <div class="category-selector__list" id="category-list">
+    <!-- Categories will be dynamically inserted here -->
+  </div>
+
+  <div class="category-selector__empty" id="category-empty" style="display: none;">
+    <p>לא נמצאו קטגוריות. אנא בדוק את הגדרות המערכת.</p>
+  </div>
+
+  <div class="category-selector__loading" id="category-loading" style="display: none;">
+    <div class="spinner"></div>
+    <p>טוען קטגוריות...</p>
+  </div>
+</div>
+
+<!-- Category Item Template -->
+<template id="category-item-template">
+  <div class="category-item" data-category-id="">
+    <div class="category-item__header">
+      <div class="category-item__icon-wrapper">
+        <span class="category-item__icon"></span>
+      </div>
+      <div class="category-item__info">
+        <h3 class="category-item__name"></h3>
+        <span class="category-item__badge category-item__badge--required" style="display: none;">נדרש</span>
+      </div>
+    </div>
+
+    <div class="category-item__content">
+      <div class="category-item__selected" style="display: none;">
+        <div class="selected-products" data-selected-products="">
+          <!-- Selected products will be shown here -->
+        </div>
+      </div>
+
+      <div class="category-item__actions">
+        <button type="button" class="btn btn--primary category-item__select-btn" data-action="select-category">
+          <span class="btn__icon">+</span>
+          <span class="btn__text">בחר רכיב</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Selected Product Badge Template -->
+<template id="selected-product-badge-template">
+  <div class="selected-product-badge" data-product-id="">
+    <div class="selected-product-badge__image">
+      <img src="" alt="" />
+    </div>
+    <div class="selected-product-badge__info">
+      <div class="selected-product-badge__name"></div>
+      <div class="selected-product-badge__price"></div>
+    </div>
+    <button type="button" class="selected-product-badge__remove" data-action="remove-product" aria-label="הסר">
+      <span>×</span>
+    </button>
+  </div>
+</template>

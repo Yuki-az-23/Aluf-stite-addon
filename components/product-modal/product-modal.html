@@ -1,0 +1,79 @@
+<!-- Product Selection Modal Template -->
+<div class="product-modal" id="product-modal" style="display: none;">
+  <div class="product-modal__backdrop" data-action="close-modal"></div>
+
+  <div class="product-modal__container">
+    <div class="product-modal__header">
+      <h2 class="product-modal__title" id="modal-title">בחר מוצר</h2>
+      <button type="button" class="product-modal__close" data-action="close-modal" aria-label="סגור">
+        <span>×</span>
+      </button>
+    </div>
+
+    <div class="product-modal__search">
+      <input
+        type="text"
+        class="product-modal__search-input"
+        id="product-search"
+        placeholder="חפש מוצר..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="product-modal__filters">
+      <label class="checkbox-label">
+        <input type="checkbox" id="filter-in-stock" />
+        <span>במלאי בלבד</span>
+      </label>
+
+      <select class="product-modal__sort" id="product-sort">
+        <option value="popularity">פופולריים</option>
+        <option value="price_asc">מחיר: נמוך לגבוה</option>
+        <option value="price_desc">מחיר: גבוה לנמוך</option>
+        <option value="name_asc">שם: א-ת</option>
+      </select>
+    </div>
+
+    <div class="product-modal__body">
+      <div class="product-grid" id="product-grid">
+        <!-- Products will be dynamically inserted here -->
+      </div>
+
+      <div class="product-modal__empty" id="products-empty" style="display: none;">
+        <p>לא נמצאו מוצרים בקטגוריה זו</p>
+      </div>
+
+      <div class="product-modal__loading" id="products-loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>טוען מוצרים...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Card Template -->
+<template id="product-card-template">
+  <div class="product-card" data-product-id="">
+    <div class="product-card__image-wrapper">
+      <img class="product-card__image" src="" alt="" />
+      <div class="product-card__badges">
+        <span class="badge badge--sale" style="display: none;">מבצע</span>
+        <span class="badge badge--out-of-stock" style="display: none;">אזל מהמלאי</span>
+      </div>
+    </div>
+
+    <div class="product-card__body">
+      <h3 class="product-card__name"></h3>
+      <div class="product-card__sku"></div>
+
+      <div class="product-card__pricing">
+        <div class="product-card__price"></div>
+        <div class="product-card__original-price" style="display: none;"></div>
+      </div>
+
+      <button type="button" class="btn btn--primary product-card__select-btn" data-action="select-product">
+        בחר מוצר
+      </button>
+    </div>
+  </div>
+</template>

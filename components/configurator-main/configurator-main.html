@@ -1,0 +1,37 @@
+<!-- Main PC Configurator Component -->
+<div class="pc-configurator" id="pc-configurator">
+  <div class="pc-configurator__container">
+    <div class="pc-configurator__header">
+      <h1 class="pc-configurator__main-title">בונה המחשבים</h1>
+      <p class="pc-configurator__description">
+        בנה את המחשב המושלם עבורך - בחר רכיבים איכותיים והשווה מחירים
+      </p>
+    </div>
+
+    <div class="pc-configurator__content">
+      <!-- Left Column - Categories -->
+      <div class="pc-configurator__categories">
+        <!-- Category Selector Component will be injected here -->
+        <div id="category-selector-root"></div>
+      </div>
+
+      <!-- Right Column - Basket/Summary -->
+      <div class="pc-configurator__basket">
+        <!-- Basket Manager Component will be injected here -->
+        <div id="basket-manager-root"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Modal Component will be injected here -->
+  <div id="product-modal-root"></div>
+
+  <!-- Error Toast -->
+  <div class="error-toast" id="error-toast" style="display: none;">
+    <div class="error-toast__content">
+      <span class="error-toast__icon">⚠️</span>
+      <span class="error-toast__message" id="error-message"></span>
+    </div>
+    <button type="button" class="error-toast__close" onclick="this.parentElement.style.display='none'">×</button>
+  </div>
+</div>

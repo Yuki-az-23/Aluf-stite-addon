@@ -1,0 +1,102 @@
+<!-- Basket Manager Component Template -->
+<div class="basket-manager" id="basket-manager">
+  <div class="basket-manager__header">
+    <h2 class="basket-manager__title">סיכום תצורה</h2>
+  </div>
+
+  <div class="basket-manager__body">
+    <!-- Selected Products List -->
+    <div class="basket-manager__products" id="basket-products">
+      <div class="basket-manager__empty" id="basket-empty">
+        <p>הסל ריק. התחל לבחור רכיבים לתצורה שלך.</p>
+      </div>
+    </div>
+
+    <!-- Price Summary -->
+    <div class="basket-manager__summary" id="basket-summary" style="display: none;">
+      <div class="summary-row">
+        <span class="summary-row__label">סכום ביניים:</span>
+        <span class="summary-row__value" id="summary-subtotal">₪0.00</span>
+      </div>
+
+      <div class="summary-row" id="summary-discount-row" style="display: none;">
+        <span class="summary-row__label">הנחה:</span>
+        <span class="summary-row__value summary-row__value--discount" id="summary-discount">-₪0.00</span>
+      </div>
+
+      <div class="summary-row summary-row--total">
+        <span class="summary-row__label">סה"כ:</span>
+        <span class="summary-row__value" id="summary-total">₪0.00</span>
+      </div>
+
+      <div class="summary-row summary-row--count">
+        <span class="summary-row__label">רכיבים:</span>
+        <span class="summary-row__value" id="summary-count">0</span>
+      </div>
+    </div>
+
+    <!-- Validation Messages -->
+    <div class="basket-manager__validation" id="basket-validation"></div>
+
+    <!-- Actions -->
+    <div class="basket-manager__actions">
+      <button
+        type="button"
+        class="btn btn--primary btn--large btn--block"
+        id="add-to-cart-btn"
+        data-action="add-to-cart"
+      >
+        <span class="btn__icon">🛒</span>
+        <span class="btn__text">הוסף לסל</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn--secondary btn--block"
+        id="clear-config-btn"
+        data-action="clear-config"
+      >
+        <span class="btn__text">נקה תצורה</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn--secondary btn--block"
+        id="save-config-btn"
+        data-action="save-config"
+        style="display: none;"
+      >
+        <span class="btn__icon">💾</span>
+        <span class="btn__text">שמור תצורה</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Product List Item Template -->
+<template id="basket-product-item-template">
+  <div class="basket-product-item" data-product-index="">
+    <div class="basket-product-item__info">
+      <div class="basket-product-item__category"></div>
+      <div class="basket-product-item__name"></div>
+      <div class="basket-product-item__sku"></div>
+    </div>
+    <div class="basket-product-item__price"></div>
+    <button
+      type="button"
+      class="basket-product-item__remove"
+      data-action="remove-item"
+      aria-label="הסר"
+    >
+      ×
+    </button>
+  </div>
+</template>
+
+<!-- Validation Message Template -->
+<template id="validation-message-template">
+  <div class="validation-message validation-message--error">
+    <span class="validation-message__icon">⚠️</span>
+    <span class="validation-message__text"></span>
+  </div>
+</template>

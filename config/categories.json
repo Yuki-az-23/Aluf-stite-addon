@@ -1,0 +1,275 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-21",
+  "categories": [
+    {
+      "id": 95,
+      "name": "Cases & Cooling",
+      "nameHebrew": "מארזים / מאוררים למארז/ ציוד עזר לבנית מחשב",
+      "displayName": "מארזים / מאוררים למארז",
+      "required": true,
+      "order": 1,
+      "icon": "🏠",
+      "maxProducts": 1,
+      "minProducts": 1,
+      "description": "Computer cases and case fans",
+      "enabled": true
+    },
+    {
+      "id": 64,
+      "name": "Power Supplies",
+      "nameHebrew": "ספקי כוח",
+      "displayName": "ספקי כוח",
+      "required": true,
+      "order": 2,
+      "icon": "⚡",
+      "maxProducts": 1,
+      "minProducts": 1,
+      "description": "Power supply units (PSU)",
+      "enabled": true
+    },
+    {
+      "id": 17,
+      "name": "Motherboards",
+      "nameHebrew": "לוחות אם",
+      "displayName": "לוחות אם",
+      "required": true,
+      "order": 3,
+      "icon": "🔧",
+      "maxProducts": 1,
+      "minProducts": 1,
+      "description": "Motherboards",
+      "enabled": true,
+      "compatibilityFields": ["socket", "formFactor", "chipset"]
+    },
+    {
+      "id": 32,
+      "name": "Intel CPUs",
+      "nameHebrew": "מעבדים INTEL",
+      "displayName": "מעבדים INTEL",
+      "required": false,
+      "order": 4,
+      "icon": "💻",
+      "maxProducts": 1,
+      "minProducts": 0,
+      "description": "Intel processors",
+      "enabled": true,
+      "mutuallyExclusive": [33],
+      "compatibilityFields": ["socket"],
+      "note": "Choose either Intel or AMD CPU, not both"
+    },
+    {
+      "id": 33,
+      "name": "AMD CPUs",
+      "nameHebrew": "מעבדים AMD",
+      "displayName": "מעבדים AMD",
+      "required": false,
+      "order": 5,
+      "icon": "💻",
+      "maxProducts": 1,
+      "minProducts": 0,
+      "description": "AMD processors",
+      "enabled": true,
+      "mutuallyExclusive": [32],
+      "compatibilityFields": ["socket"],
+      "note": "Choose either Intel or AMD CPU, not both"
+    },
+    {
+      "id": 34,
+      "name": "Air Cooling",
+      "nameHebrew": "פתרונות קירור אוויר",
+      "displayName": "פתרונות קירור אוויר",
+      "required": false,
+      "order": 6,
+      "icon": "🌀",
+      "maxProducts": 1,
+      "minProducts": 0,
+      "description": "Air CPU coolers",
+      "enabled": true,
+      "mutuallyExclusive": [40],
+      "note": "Choose either air or liquid cooling"
+    },
+    {
+      "id": 40,
+      "name": "Liquid Cooling",
+      "nameHebrew": "קירור נוזלי",
+      "displayName": "קירור נוזלי",
+      "required": false,
+      "order": 7,
+      "icon": "💧",
+      "maxProducts": 1,
+      "minProducts": 0,
+      "description": "Liquid/AIO CPU coolers",
+      "enabled": true,
+      "mutuallyExclusive": [34],
+      "note": "Choose either air or liquid cooling"
+    },
+    {
+      "id": 169,
+      "name": "Memory (RAM)",
+      "nameHebrew": "זכרון",
+      "displayName": "זכרון",
+      "required": true,
+      "order": 8,
+      "icon": "💾",
+      "maxProducts": 4,
+      "minProducts": 1,
+      "description": "System memory (RAM)",
+      "enabled": true,
+      "compatibilityFields": ["memoryType", "speed"],
+      "allowMultiple": true
+    },
+    {
+      "id": 172,
+      "name": "SSD",
+      "nameHebrew": "SSD - Solid State Drive",
+      "displayName": "SSD",
+      "required": false,
+      "order": 9,
+      "icon": "💿",
+      "maxProducts": 3,
+      "minProducts": 0,
+      "description": "Solid state drives",
+      "enabled": true,
+      "allowMultiple": true
+    },
+    {
+      "id": 48,
+      "name": "HDD",
+      "nameHebrew": "HDD פנימי",
+      "displayName": "HDD פנימי",
+      "required": false,
+      "order": 10,
+      "icon": "💽",
+      "maxProducts": 3,
+      "minProducts": 0,
+      "description": "Internal hard disk drives",
+      "enabled": true,
+      "allowMultiple": true
+    },
+    {
+      "id": 82,
+      "name": "Graphics Cards",
+      "nameHebrew": "כרטיסי מסך",
+      "displayName": "כרטיסי מסך",
+      "required": false,
+      "order": 11,
+      "icon": "🎮",
+      "maxProducts": 1,
+      "minProducts": 0,
+      "description": "Graphics cards (GPU)",
+      "enabled": true,
+      "compatibilityFields": ["interface", "powerRequirement"]
+    },
+    {
+      "id": 74,
+      "name": "Optical Drives",
+      "nameHebrew": "כונן אופטי",
+      "displayName": "כונן אופטי",
+      "required": false,
+      "order": 12,
+      "icon": "📀",
+      "maxProducts": 1,
+      "minProducts": 0,
+      "description": "DVD/Blu-ray drives",
+      "enabled": true
+    },
+    {
+      "id": 156,
+      "name": "Software",
+      "nameHebrew": "תוכנות",
+      "displayName": "תוכנות",
+      "required": false,
+      "order": 13,
+      "icon": "💿",
+      "maxProducts": 5,
+      "minProducts": 0,
+      "description": "Operating systems and software",
+      "enabled": true,
+      "allowMultiple": true
+    },
+    {
+      "id": 271,
+      "name": "Lab Services",
+      "nameHebrew": "שירותי מעבדה",
+      "displayName": "שירותי מעבדה",
+      "required": false,
+      "order": 14,
+      "icon": "🔧",
+      "maxProducts": 5,
+      "minProducts": 0,
+      "description": "Assembly and testing services",
+      "enabled": true,
+      "allowMultiple": true,
+      "isService": true
+    },
+    {
+      "id": 287,
+      "name": "Cooler Master",
+      "nameHebrew": "Cooler Master",
+      "displayName": "Cooler Master",
+      "required": false,
+      "order": 15,
+      "icon": "❄️",
+      "maxProducts": 3,
+      "minProducts": 0,
+      "description": "Cooler Master accessories",
+      "enabled": true,
+      "allowMultiple": true
+    }
+  ],
+  "validationRules": {
+    "requireAtLeastOneCPU": {
+      "enabled": true,
+      "message": "יש לבחור לפחות מעבד אחד (Intel או AMD)",
+      "categories": [32, 33],
+      "minCount": 1
+    },
+    "requireAtLeastOneCooling": {
+      "enabled": true,
+      "message": "יש לבחור פתרון קירור למעבד",
+      "categories": [34, 40],
+      "minCount": 1,
+      "condition": "if_cpu_selected"
+    },
+    "requireStorage": {
+      "enabled": true,
+      "message": "יש לבחור לפחות אמצעי אחסון אחד (SSD או HDD)",
+      "categories": [172, 48],
+      "minCount": 1
+    }
+  },
+  "displaySettings": {
+    "showCategoryIcons": true,
+    "showCategoryDescriptions": false,
+    "highlightRequired": true,
+    "groupSimilarCategories": true,
+    "categoryGroups": [
+      {
+        "name": "Core Components",
+        "nameHebrew": "רכיבים מרכזיים",
+        "categories": [17, 32, 33, 169]
+      },
+      {
+        "name": "Cooling & Power",
+        "nameHebrew": "קירור ואספקת חשמל",
+        "categories": [34, 40, 64]
+      },
+      {
+        "name": "Storage",
+        "nameHebrew": "אחסון",
+        "categories": [172, 48]
+      },
+      {
+        "name": "Additional Components",
+        "nameHebrew": "רכיבים נוספים",
+        "categories": [82, 74, 95]
+      },
+      {
+        "name": "Services & Extras",
+        "nameHebrew": "שירותים ותוספות",
+        "categories": [156, 271, 287]
+      }
+    ]
+  }
+}
