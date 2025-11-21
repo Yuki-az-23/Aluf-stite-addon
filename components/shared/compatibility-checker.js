@@ -85,6 +85,39 @@ class CompatibilityChecker {
   }
 
   /**
+   * Check if a product would be compatible with current configuration
+   * Used for proactive filtering before selection
+   * @param {Object} product - Product to check
+   * @param {number} categoryId - Category ID of the product
+   * @param {Object} configuration - Current configuration
+   * @param {Array} categories - Array of category definitions
+   * @returns {boolean} True if compatible or no conflicts found
+   */
+  isProductCompatible(product, categoryId, configuration, categories) {
+    if (!this.loaded) {
+      return true; // If rules not loaded, show all products
+    }
+
+    // Create temporary configuration with this product added
+    const tempConfig = {
+      ...configuration,
+      selectedProducts: [
+        ...configuration.selectedProducts,
+        {
+          product: product,
+          categoryId: categoryId,
+          quantity: 1
+        }
+      ]
+    };
+
+    // Check for errors only (warnings and info are acceptable)
+    const issues = this.checkConfiguration(tempConfig, categories);
+
+    return issues.errors.length === 0;
+  }
+
+  /**
    * Check a single compatibility rule
    * @param {Object} rule - Compatibility rule
    * @param {Object} productsByCategory - Products grouped by category ID

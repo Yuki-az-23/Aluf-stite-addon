@@ -18,6 +18,8 @@ This configurator enables customers to:
 ├── README.md                          # Main documentation (this file)
 ├── ARCHITECTURE.md                    # Architecture and data model documentation
 ├── KONIMBO_INTEGRATION.md            # Konimbo integration guide
+├── COMPATIBILITY.md                   # Compatibility checking system guide
+├── FILTERING.md                       # Product filtering system guide
 ├── components/
 │   ├── configurator-main/            # Main configurator container
 │   │   ├── configurator-main.html    # Main HTML structure
@@ -55,7 +57,9 @@ This configurator enables customers to:
 - **RTL Support**: Full Hebrew/RTL language support
 
 ### Advanced Features
+- **Proactive Product Filtering**: Automatically shows only compatible products based on current configuration
 - **Automatic Compatibility Checking**: Validates CPU/motherboard socket, RAM type, PSU wattage, physical clearances, and more
+- **Dynamic Specification Filters**: Filter by manufacturer, socket, memory type, and category-specific attributes
 - **Smart Specification Parsing**: Automatically extracts component specs from product data
 - **Multi-level Validation**: Errors (blocks cart), warnings, and info messages
 - **Saved Configurations**: Save and load configurations (ready for implementation)

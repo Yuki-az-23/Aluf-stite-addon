@@ -367,7 +367,7 @@
   font-size: 1rem;
 }
 
-.product-modal__filters {
+.product-modal__toolbar {
   padding: var(--spacing-md) var(--spacing-lg);
   border-bottom: 1px solid var(--gray-200);
   display: flex;
@@ -395,7 +395,23 @@
 .product-modal__body {
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  gap: 0;
+}
+
+.product-modal__filters {
+  width: 250px;
+  min-width: 250px;
   padding: var(--spacing-lg);
+  border-left: 1px solid var(--gray-200);
+  overflow-y: auto;
+  background: var(--gray-50);
+}
+
+.product-modal__main {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
 }
 
 .product-modal__empty,
@@ -403,6 +419,74 @@
   padding: var(--spacing-xxl);
   text-align: center;
   color: var(--gray-600);
+}
+
+/* Filter Groups */
+.filter-group {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.filter-group:last-child {
+  border-bottom: none;
+}
+
+.filter-group__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-md);
+}
+
+.filter-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  padding: var(--spacing-xs) 0;
+}
+
+.filter-option:hover {
+  color: var(--gray-900);
+}
+
+.filter-option__checkbox {
+  cursor: pointer;
+}
+
+.filter-option__label {
+  flex: 1;
+}
+
+.filter-option__count {
+  color: var(--gray-500);
+  font-size: 0.75rem;
+}
+
+.filter-group__show-more {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--gray-300);
+  background: white;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  width: 100%;
+  transition: var(--transition);
+}
+
+.filter-group__show-more:hover {
+  background: var(--gray-50);
 }
 
 /* Product Grid */
@@ -828,6 +912,17 @@
 
   .product-modal__container {
     max-height: 95vh;
+  }
+
+  .product-modal__body {
+    flex-direction: column;
+  }
+
+  .product-modal__filters {
+    width: 100%;
+    border-left: none;
+    border-bottom: 1px solid var(--gray-200);
+    max-height: 200px;
   }
 
   .basket-manager {
