@@ -6,6 +6,7 @@
 
 import stateManager from '../shared/state-manager.js';
 import { konimboAPI } from '../../integration/konimbo-api.js';
+import configManager from '../shared/config-manager.js';
 import { EVENTS } from '../shared/constants.js';
 import { DOM, Num, log } from '../shared/utils.js';
 
@@ -42,6 +43,13 @@ class BasketManager {
     this.addToCartBtn = this.root.querySelector('#add-to-cart-btn');
     this.clearConfigBtn = this.root.querySelector('#clear-config-btn');
     this.saveConfigBtn = this.root.querySelector('#save-config-btn');
+    this.printConfigBtn = this.root.querySelector('#print-config-btn');
+    this.loadConfigBtn = this.root.querySelector('#load-config-btn');
+
+    // Config code elements
+    this.configCodeSection = this.root.querySelector('#basket-config-code');
+    this.configCodeValue = this.root.querySelector('#config-code-value');
+    this.copyCodeBtn = this.root.querySelector('#copy-code-btn');
 
     // Summary elements
     this.subtotalEl = this.root.querySelector('#summary-subtotal');
@@ -50,9 +58,21 @@ class BasketManager {
     this.totalEl = this.root.querySelector('#summary-total');
     this.countEl = this.root.querySelector('#summary-count');
 
+    // Load modal elements
+    this.loadModal = document.querySelector('#load-config-modal');
+    this.configCodeInput = document.querySelector('#config-code-input');
+    this.loadByCodeBtn = document.querySelector('#load-by-code-btn');
+    this.recentConfigsList = document.querySelector('#recent-configs-list');
+
     // Get templates
     this.productItemTemplate = document.querySelector('#basket-product-item-template');
     this.validationMessageTemplate = document.querySelector('#validation-message-template');
+    this.recentConfigItemTemplate = document.querySelector('#recent-config-item-template');
+
+    // Configuration state
+    this.currentConfigCode = null;
+    this.replacementModal = null;
+    this.printView = null;
 
     // Subscribe to state changes
     this.unsubscribe = stateManager.subscribe(this.handleStateChange.bind(this));
@@ -111,6 +131,49 @@ class BasketManager {
     this.saveConfigBtn.addEventListener('click', () => {
       this.handleSaveConfiguration();
     });
+
+    // Print configuration
+    this.printConfigBtn.addEventListener('click', () => {
+      this.handlePrintConfiguration();
+    });
+
+    // Load configuration
+    this.loadConfigBtn.addEventListener('click', () => {
+      this.handleLoadConfiguration();
+    });
+
+    // Copy configuration code
+    this.copyCodeBtn.addEventListener('click', () => {
+      this.handleCopyCode();
+    });
+
+    // Load modal close buttons
+    const loadModalCloseButtons = document.querySelectorAll('[data-action="close-load-modal"]');
+    loadModalCloseButtons.forEach(btn => {
+      btn.addEventListener('click', () => this.closeLoadModal());
+    });
+
+    // Load by code button
+    this.loadByCodeBtn.addEventListener('click', () => {
+      this.handleLoadByCode();
+    });
+
+    // Load recent config (delegated event)
+    this.recentConfigsList.addEventListener('click', (e) => {
+      const loadBtn = e.target.closest('[data-action="load-recent-config"]');
+      if (loadBtn) {
+        const configItem = loadBtn.closest('.recent-config-item');
+        const code = configItem.dataset.configCode;
+        this.handleLoadByCode(code);
+      }
+    });
+
+    // Enter key in config code input
+    this.configCodeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.handleLoadByCode();
+      }
+    });
   }
 
   /**
@@ -130,6 +193,7 @@ class BasketManager {
       DOM.hide(this.summaryEl);
       this.addToCartBtn.disabled = true;
       this.clearConfigBtn.disabled = true;
+      this.hideConfigCode();
       DOM.empty(this.validationEl);
       return;
     }
@@ -362,12 +426,316 @@ class BasketManager {
   handleSaveConfiguration() {
     log.debug('BasketManager: Saving configuration');
 
-    const name = prompt('הכנס שם לתצורה:');
+    const state = stateManager.getState();
+    const config = state.currentConfiguration;
 
-    if (name) {
-      stateManager.saveConfiguration(name);
-      alert('התצורה נשמרה בהצלחה!');
+    if (config.selectedProducts.length === 0) {
+      alert('אין מה לשמור. הסל ריק.');
+      return;
     }
+
+    const customerName = prompt('הכנס שם (אופציונלי):') || '';
+
+    try {
+      const code = configManager.saveConfiguration(config, customerName);
+      this.currentConfigCode = code;
+
+      // Update UI with configuration code
+      this.showConfigCode(code);
+
+      alert(`התצורה נשמרה בהצלחה!\n\nקוד התצורה: ${code}\n\nשמור קוד זה לטעינה מאוחרת יותר.`);
+    } catch (error) {
+      log.error('BasketManager: Error saving configuration', error);
+      alert('שגיאה בשמירת התצורה. אנא נסה שוב.');
+    }
+  }
+
+  /**
+   * Handle print configuration
+   */
+  handlePrintConfiguration() {
+    log.debug('BasketManager: Printing configuration');
+
+    if (!this.currentConfigCode) {
+      // Save first if not saved
+      this.handleSaveConfiguration();
+
+      if (!this.currentConfigCode) {
+        return; // User cancelled
+      }
+    }
+
+    // Lazy load print view component
+    if (!this.printView) {
+      import('../print-view/print-view.js').then(module => {
+        const PrintView = module.default;
+        this.printView = new PrintView('#print-view');
+        this.printView.printConfiguration(this.currentConfigCode);
+      }).catch(error => {
+        log.error('BasketManager: Error loading print view', error);
+        alert('שגיאה בטעינת תצוגת ההדפסה');
+      });
+    } else {
+      this.printView.printConfiguration(this.currentConfigCode);
+    }
+  }
+
+  /**
+   * Handle load configuration
+   */
+  handleLoadConfiguration() {
+    log.debug('BasketManager: Opening load configuration modal');
+
+    // Load recent configurations
+    this.loadRecentConfigurations();
+
+    // Show modal
+    DOM.show(this.loadModal);
+    document.body.style.overflow = 'hidden';
+
+    // Focus on input
+    this.configCodeInput.value = '';
+    this.configCodeInput.focus();
+  }
+
+  /**
+   * Handle load by code
+   * @param {string} code - Optional code (from recent list or input)
+   */
+  async handleLoadByCode(code) {
+    const configCode = code || this.configCodeInput.value.trim().toUpperCase();
+
+    if (!configCode) {
+      alert('אנא הזן קוד תצורה');
+      return;
+    }
+
+    log.debug('BasketManager: Loading configuration by code', configCode);
+
+    // Load configuration data
+    const configData = configManager.loadByCode(configCode);
+
+    if (!configData) {
+      alert(`לא נמצאה תצורה עם הקוד: ${configCode}`);
+      return;
+    }
+
+    // Close load modal
+    this.closeLoadModal();
+
+    // Check if current configuration will be overwritten
+    const state = stateManager.getState();
+    if (state.currentConfiguration.selectedProducts.length > 0) {
+      if (!confirm('טעינת תצורה זו תמחק את התצורה הנוכחית. להמשיך?')) {
+        return;
+      }
+    }
+
+    // Check stock status for all products
+    const stockStatus = await configManager.checkStockStatus(
+      configData.configuration,
+      async (productId) => {
+        try {
+          const product = await konimboAPI.getProductById(productId);
+          return product && product.inStock;
+        } catch (error) {
+          log.warn('BasketManager: Error checking stock for product', productId, error);
+          return false;
+        }
+      }
+    );
+
+    // If all items in stock, load directly
+    if (stockStatus.outOfStock.length === 0) {
+      this.loadConfigurationData(configData);
+      alert(`התצורה "${configCode}" נטענה בהצלחה!`);
+      return;
+    }
+
+    // Handle out-of-stock items with replacement modal
+    alert(`${stockStatus.outOfStock.length} מוצרים אינם זמינים במלאי.\nתוצג אפשרות לבחור מוצרים חלופיים.`);
+
+    this.handleOutOfStockItems(configData, stockStatus);
+  }
+
+  /**
+   * Handle out-of-stock items with replacement modal
+   * @param {Object} configData
+   * @param {Object} stockStatus
+   */
+  async handleOutOfStockItems(configData, stockStatus) {
+    // Lazy load replacement modal
+    if (!this.replacementModal) {
+      const module = await import('../replacement-modal/replacement-modal.js');
+      const ReplacementModal = module.default;
+      this.replacementModal = new ReplacementModal('#replacement-modal');
+    }
+
+    // Clear current configuration
+    stateManager.clearConfiguration();
+
+    // Add in-stock items first
+    stockStatus.inStock.forEach(item => {
+      stateManager.addProduct(item.product, item.categoryId, item.quantity);
+    });
+
+    // Process out-of-stock items one by one
+    let currentIndex = 0;
+    const processNextOutOfStockItem = async () => {
+      if (currentIndex >= stockStatus.outOfStock.length) {
+        // All done
+        this.currentConfigCode = configData.code;
+        this.showConfigCode(configData.code);
+        alert('טעינת התצורה הושלמה!');
+        return;
+      }
+
+      const item = stockStatus.outOfStock[currentIndex];
+      const state = stateManager.getState();
+      const configuration = state.currentConfiguration;
+
+      // Open replacement modal
+      this.replacementModal.open(
+        item.product,
+        item.categoryId,
+        configuration,
+        // On select replacement
+        (replacement) => {
+          stateManager.addProduct(replacement, item.categoryId, item.quantity);
+          currentIndex++;
+          processNextOutOfStockItem();
+        },
+        // On skip
+        () => {
+          // Skip this product
+          currentIndex++;
+          processNextOutOfStockItem();
+        },
+        // On cancel
+        () => {
+          // Cancel entire load
+          stateManager.clearConfiguration();
+          alert('טעינת התצורה בוטלה');
+        }
+      );
+    };
+
+    processNextOutOfStockItem();
+  }
+
+  /**
+   * Load configuration data into state
+   * @param {Object} configData
+   */
+  loadConfigurationData(configData) {
+    // Clear current configuration
+    stateManager.clearConfiguration();
+
+    // Add all products
+    configData.configuration.selectedProducts.forEach(item => {
+      stateManager.addProduct(item.product, item.categoryId, item.quantity);
+    });
+
+    // Set configuration code
+    this.currentConfigCode = configData.code;
+    this.showConfigCode(configData.code);
+  }
+
+  /**
+   * Handle copy configuration code
+   */
+  handleCopyCode() {
+    if (!this.currentConfigCode) {
+      return;
+    }
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(this.currentConfigCode).then(() => {
+      // Show success feedback
+      const originalText = this.copyCodeBtn.querySelector('span').textContent;
+      this.copyCodeBtn.querySelector('span').textContent = '✓';
+
+      setTimeout(() => {
+        this.copyCodeBtn.querySelector('span').textContent = originalText;
+      }, 2000);
+    }).catch(error => {
+      log.error('BasketManager: Error copying code', error);
+      alert('שגיאה בהעתקת הקוד');
+    });
+  }
+
+  /**
+   * Show configuration code in UI
+   * @param {string} code
+   */
+  showConfigCode(code) {
+    this.configCodeValue.textContent = code;
+    DOM.show(this.configCodeSection);
+  }
+
+  /**
+   * Hide configuration code
+   */
+  hideConfigCode() {
+    this.configCodeValue.textContent = '--';
+    DOM.hide(this.configCodeSection);
+    this.currentConfigCode = null;
+  }
+
+  /**
+   * Load recent configurations into modal
+   */
+  loadRecentConfigurations() {
+    const recentConfigs = configManager.getRecentConfigurations(5);
+
+    // Clear existing
+    DOM.empty(this.recentConfigsList);
+
+    if (recentConfigs.length === 0) {
+      this.recentConfigsList.innerHTML = '<p class="recent-configs-empty">אין תצורות שמורות</p>';
+      return;
+    }
+
+    // Add recent configs
+    recentConfigs.forEach(configData => {
+      const itemEl = this.createRecentConfigItem(configData);
+      this.recentConfigsList.appendChild(itemEl);
+    });
+  }
+
+  /**
+   * Create recent config item element
+   * @param {Object} configData
+   * @returns {HTMLElement}
+   */
+  createRecentConfigItem(configData) {
+    const clone = this.recentConfigItemTemplate.content.cloneNode(true);
+    const itemEl = clone.querySelector('.recent-config-item');
+
+    itemEl.dataset.configCode = configData.code;
+
+    const codeEl = itemEl.querySelector('.recent-config-item__code');
+    codeEl.textContent = configData.code;
+
+    const dateEl = itemEl.querySelector('.recent-config-item__date');
+    const date = new Date(configData.updatedAt);
+    dateEl.textContent = date.toLocaleDateString('he-IL');
+
+    const countEl = itemEl.querySelector('.recent-config-item__count');
+    countEl.textContent = `${configData.itemCount} רכיבים`;
+
+    const priceEl = itemEl.querySelector('.recent-config-item__price');
+    priceEl.textContent = Num.formatPrice(configData.totalPrice);
+
+    return itemEl;
+  }
+
+  /**
+   * Close load configuration modal
+   */
+  closeLoadModal() {
+    DOM.hide(this.loadModal);
+    document.body.style.overflow = '';
   }
 
   /**
@@ -393,6 +761,12 @@ class BasketManager {
   destroy() {
     if (this.unsubscribe) {
       this.unsubscribe();
+    }
+    if (this.replacementModal) {
+      this.replacementModal.destroy();
+    }
+    if (this.printView) {
+      this.printView.destroy();
     }
     log.debug('BasketManager: Destroyed');
   }

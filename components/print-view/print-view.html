@@ -1,0 +1,95 @@
+<!-- Print View (Hidden, only visible when printing) -->
+<div class="print-view" id="print-view" style="display: none;">
+  <div class="print-header">
+    <div class="print-header__logo">
+      <!-- Add store logo here -->
+      <h1 class="print-header__store-name">קונפיגורציית מחשב</h1>
+    </div>
+    <div class="print-header__info">
+      <div class="print-info-item">
+        <span class="print-info-label">קוד הזמנה:</span>
+        <span class="print-info-value print-config-code"></span>
+      </div>
+      <div class="print-info-item">
+        <span class="print-info-label">תאריך:</span>
+        <span class="print-info-value print-date"></span>
+      </div>
+      <div class="print-info-item">
+        <span class="print-info-label">שעה:</span>
+        <span class="print-info-value print-time"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="print-customer" id="print-customer" style="display: none;">
+    <h2 class="print-section-title">פרטי לקוח</h2>
+    <div class="print-customer-info">
+      <span class="print-info-label">שם:</span>
+      <span class="print-info-value print-customer-name"></span>
+    </div>
+  </div>
+
+  <div class="print-body">
+    <h2 class="print-section-title">רכיבים נבחרים</h2>
+
+    <table class="print-table">
+      <thead>
+        <tr>
+          <th class="print-table__col-number">#</th>
+          <th class="print-table__col-category">קטגוריה</th>
+          <th class="print-table__col-product">מוצר</th>
+          <th class="print-table__col-sku">קוד</th>
+          <th class="print-table__col-qty">כמות</th>
+          <th class="print-table__col-price">מחיר יחידה</th>
+          <th class="print-table__col-total">סה"כ</th>
+        </tr>
+      </thead>
+      <tbody id="print-items-tbody">
+        <!-- Items will be inserted here -->
+      </tbody>
+      <tfoot>
+        <tr class="print-table__total-row">
+          <td colspan="6" class="print-table__total-label">סה"כ לתשלום:</td>
+          <td class="print-table__total-value print-total-price"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="print-footer">
+    <div class="print-footer__barcode">
+      <div class="print-barcode-container">
+        <svg class="print-barcode" id="print-barcode"></svg>
+        <div class="print-barcode-text print-config-code-barcode"></div>
+      </div>
+    </div>
+
+    <div class="print-footer__notes">
+      <h3 class="print-notes-title">הערות</h3>
+      <ul class="print-notes-list">
+        <li>קונפיגורציה זו שמורה למשך 30 ימים</li>
+        <li>לטעינת הקונפיגורציה: הזן את קוד ההזמנה בעמוד הבונה</li>
+        <li>במידה ומוצר אינו זמין, יוצע מוצר חלופי תואם</li>
+        <li>המחירים נכונים למועד יצירת הקונפיגורציה ועשויים להשתנות</li>
+      </ul>
+    </div>
+
+    <div class="print-footer__contact">
+      <p>לשאלות ופרטים נוספים: <span id="print-store-phone">טלפון החנות</span></p>
+      <p>כתובת: <span id="print-store-address">כתובת החנות</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- Print Item Row Template -->
+<template id="print-item-row-template">
+  <tr class="print-table__row">
+    <td class="print-table__col-number print-item-number"></td>
+    <td class="print-table__col-category print-item-category"></td>
+    <td class="print-table__col-product print-item-product"></td>
+    <td class="print-table__col-sku print-item-sku"></td>
+    <td class="print-table__col-qty print-item-qty"></td>
+    <td class="print-table__col-price print-item-price"></td>
+    <td class="print-table__col-total print-item-total"></td>
+  </tr>
+</template>

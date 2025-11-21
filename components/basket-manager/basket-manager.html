@@ -12,6 +12,17 @@
       </div>
     </div>
 
+    <!-- Configuration Code -->
+    <div class="basket-manager__config-code" id="basket-config-code" style="display: none;">
+      <div class="config-code-display">
+        <label class="config-code-label">קוד תצורה:</label>
+        <div class="config-code-value" id="config-code-value">--</div>
+        <button type="button" class="btn btn--icon" id="copy-code-btn" data-action="copy-code" title="העתק קוד">
+          <span>📋</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Price Summary -->
     <div class="basket-manager__summary" id="basket-summary" style="display: none;">
       <div class="summary-row">
@@ -50,6 +61,38 @@
         <span class="btn__text">הוסף לסל</span>
       </button>
 
+      <div class="basket-manager__actions-row">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          id="save-config-btn"
+          data-action="save-config"
+        >
+          <span class="btn__icon">💾</span>
+          <span class="btn__text">שמור</span>
+        </button>
+
+        <button
+          type="button"
+          class="btn btn--secondary"
+          id="print-config-btn"
+          data-action="print-config"
+        >
+          <span class="btn__icon">🖨️</span>
+          <span class="btn__text">הדפס</span>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn--secondary btn--block"
+        id="load-config-btn"
+        data-action="load-config"
+      >
+        <span class="btn__icon">📂</span>
+        <span class="btn__text">טען תצורה</span>
+      </button>
+
       <button
         type="button"
         class="btn btn--secondary btn--block"
@@ -58,20 +101,65 @@
       >
         <span class="btn__text">נקה תצורה</span>
       </button>
-
-      <button
-        type="button"
-        class="btn btn--secondary btn--block"
-        id="save-config-btn"
-        data-action="save-config"
-        style="display: none;"
-      >
-        <span class="btn__icon">💾</span>
-        <span class="btn__text">שמור תצורה</span>
-      </button>
     </div>
   </div>
 </div>
+
+<!-- Load Configuration Modal -->
+<div class="load-config-modal" id="load-config-modal" style="display: none;">
+  <div class="load-config-modal__backdrop" data-action="close-load-modal"></div>
+
+  <div class="load-config-modal__container">
+    <div class="load-config-modal__header">
+      <h2 class="load-config-modal__title">טען תצורה שמורה</h2>
+      <button type="button" class="load-config-modal__close" data-action="close-load-modal" aria-label="סגור">
+        <span>×</span>
+      </button>
+    </div>
+
+    <div class="load-config-modal__body">
+      <div class="load-config-modal__input">
+        <label for="config-code-input" class="load-config-modal__label">הזן קוד תצורה:</label>
+        <input
+          type="text"
+          id="config-code-input"
+          class="load-config-modal__code-input"
+          placeholder="PC-XXXXXX"
+          maxlength="9"
+        />
+      </div>
+
+      <div class="load-config-modal__recent" id="recent-configs">
+        <h3 class="load-config-modal__subtitle">תצורות אחרונות:</h3>
+        <div class="recent-configs-list" id="recent-configs-list">
+          <!-- Recent configs will be inserted here -->
+        </div>
+      </div>
+
+      <div class="load-config-modal__actions">
+        <button type="button" class="btn btn--primary" id="load-by-code-btn">טען תצורה</button>
+        <button type="button" class="btn btn--secondary" data-action="close-load-modal">ביטול</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Config Item Template -->
+<template id="recent-config-item-template">
+  <div class="recent-config-item" data-config-code="">
+    <div class="recent-config-item__info">
+      <div class="recent-config-item__code"></div>
+      <div class="recent-config-item__date"></div>
+      <div class="recent-config-item__details">
+        <span class="recent-config-item__count"></span>
+        <span class="recent-config-item__price"></span>
+      </div>
+    </div>
+    <button type="button" class="btn btn--sm btn--secondary" data-action="load-recent-config">
+      טען
+    </button>
+  </div>
+</template>
 
 <!-- Product List Item Template -->
 <template id="basket-product-item-template">

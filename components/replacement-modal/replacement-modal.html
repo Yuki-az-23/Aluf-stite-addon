@@ -1,0 +1,113 @@
+<!-- Replacement Modal -->
+<div class="replacement-modal" id="replacement-modal" style="display: none;">
+  <div class="replacement-modal__backdrop"></div>
+
+  <div class="replacement-modal__container">
+    <div class="replacement-modal__header">
+      <h2 class="replacement-modal__title">בחר מוצר חלופי</h2>
+      <button type="button" class="replacement-modal__close" data-action="close-replacement-modal" aria-label="סגור">
+        <span>×</span>
+      </button>
+    </div>
+
+    <div class="replacement-modal__body">
+      <div class="replacement-modal__info">
+        <div class="replacement-modal__alert">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <h3 class="replacement-modal__alert-title">מוצר אינו זמין במלאי</h3>
+            <p class="replacement-modal__alert-message" id="out-of-stock-product"></p>
+          </div>
+        </div>
+
+        <p class="replacement-modal__description">
+          אנא בחר מוצר חלופי תואם מהרשימה למטה. המוצרים המוצגים תואמים לשאר הרכיבים בקונפיגורציה.
+        </p>
+      </div>
+
+      <div class="replacement-modal__search">
+        <input
+          type="text"
+          class="replacement-modal__search-input"
+          id="replacement-search"
+          placeholder="חפש מוצר חלופי..."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="replacement-modal__filters">
+        <label class="checkbox-label">
+          <input type="checkbox" id="replacement-filter-price" />
+          <span>טווח מחיר דומה (±20%)</span>
+        </label>
+
+        <select class="replacement-modal__sort" id="replacement-sort">
+          <option value="price_asc">מחיר: נמוך לגבוה</option>
+          <option value="price_desc">מחיר: גבוה לנמוך</option>
+          <option value="similarity">דומה ביותר</option>
+        </select>
+      </div>
+
+      <div class="replacement-modal__products">
+        <div class="replacement-products-grid" id="replacement-products-grid">
+          <!-- Replacement products will be dynamically inserted here -->
+        </div>
+
+        <div class="replacement-modal__empty" id="replacement-empty" style="display: none;">
+          <p>לא נמצאו מוצרים חלופיים תואמים</p>
+        </div>
+
+        <div class="replacement-modal__loading" id="replacement-loading" style="display: none;">
+          <div class="spinner"></div>
+          <p>טוען מוצרים חלופיים...</p>
+        </div>
+      </div>
+
+      <div class="replacement-modal__actions">
+        <button type="button" class="btn btn--secondary" data-action="skip-replacement">
+          דלג (הסר מוצר)
+        </button>
+        <button type="button" class="btn btn--secondary" data-action="cancel-load">
+          בטל טעינה
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Replacement Product Card Template -->
+<template id="replacement-product-card-template">
+  <div class="replacement-product-card" data-product-id="">
+    <div class="replacement-product-card__image-wrapper">
+      <img class="replacement-product-card__image" src="" alt="" />
+      <div class="replacement-product-card__badges">
+        <span class="badge badge--recommended" style="display: none;">מומלץ</span>
+      </div>
+    </div>
+
+    <div class="replacement-product-card__body">
+      <h3 class="replacement-product-card__name"></h3>
+      <div class="replacement-product-card__sku"></div>
+
+      <div class="replacement-product-card__comparison">
+        <div class="price-comparison">
+          <span class="price-comparison__label">מחיר מקורי:</span>
+          <span class="price-comparison__original"></span>
+        </div>
+        <div class="price-comparison">
+          <span class="price-comparison__label">מחיר חלופי:</span>
+          <span class="price-comparison__new"></span>
+        </div>
+        <div class="price-comparison__diff">
+          <span class="price-diff"></span>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn--primary replacement-product-card__select-btn" data-action="select-replacement">
+        בחר מוצר זה
+      </button>
+    </div>
+  </div>
+</template>
