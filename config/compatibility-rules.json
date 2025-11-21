@@ -1,0 +1,306 @@
+{
+  "version": "1.0.0",
+  "description": "Compatibility rules for PC components",
+  "compatibilityRules": [
+    {
+      "id": "cpu_motherboard_socket",
+      "name": "CPU-Motherboard Socket Compatibility",
+      "description": "CPU socket must match motherboard socket",
+      "severity": "error",
+      "categories": {
+        "primary": [32, 33],
+        "secondary": [17]
+      },
+      "rule": {
+        "type": "field_match",
+        "primaryField": "socket",
+        "secondaryField": "socket",
+        "message": "Socket המעבד ({primaryValue}) לא תואם ל-Socket של לוח האם ({secondaryValue})"
+      }
+    },
+    {
+      "id": "ram_motherboard_type",
+      "name": "RAM-Motherboard Memory Type",
+      "description": "RAM type must match motherboard memory type",
+      "severity": "error",
+      "categories": {
+        "primary": [169],
+        "secondary": [17]
+      },
+      "rule": {
+        "type": "field_match",
+        "primaryField": "memoryType",
+        "secondaryField": "memoryType",
+        "message": "סוג הזיכרון ({primaryValue}) לא תואם ללוח האם ({secondaryValue})"
+      }
+    },
+    {
+      "id": "ram_motherboard_speed",
+      "name": "RAM Speed Compatibility",
+      "description": "RAM speed should not exceed motherboard max speed",
+      "severity": "warning",
+      "categories": {
+        "primary": [169],
+        "secondary": [17]
+      },
+      "rule": {
+        "type": "max_value",
+        "primaryField": "memorySpeed",
+        "secondaryField": "maxMemorySpeed",
+        "message": "מהירות הזיכרון ({primaryValue}MHz) גבוהה ממהירות מקסימלית של לוח האם ({secondaryValue}MHz). הזיכרון יעבוד במהירות נמוכה יותר."
+      }
+    },
+    {
+      "id": "cpu_cooler_socket",
+      "name": "CPU Cooler Socket Compatibility",
+      "description": "CPU cooler must support CPU socket",
+      "severity": "error",
+      "categories": {
+        "primary": [34, 40],
+        "secondary": [32, 33]
+      },
+      "rule": {
+        "type": "array_contains",
+        "primaryField": "supportedSockets",
+        "secondaryField": "socket",
+        "message": "מקרר המעבד אינו תומך ב-Socket {secondaryValue}"
+      }
+    },
+    {
+      "id": "psu_total_power",
+      "name": "PSU Wattage Sufficiency",
+      "description": "PSU wattage must be sufficient for all components",
+      "severity": "error",
+      "categories": {
+        "primary": [64],
+        "secondary": "all"
+      },
+      "rule": {
+        "type": "total_power",
+        "primaryField": "wattage",
+        "secondaryField": "tdp",
+        "safetyMargin": 1.2,
+        "message": "הספק ספק הכוח ({primaryValue}W) אינו מספיק למערכת (נדרש לפחות {requiredValue}W)"
+      }
+    },
+    {
+      "id": "gpu_psu_power",
+      "name": "GPU Power Requirement",
+      "description": "PSU must have required PCIe power connectors and wattage for GPU",
+      "severity": "error",
+      "categories": {
+        "primary": [82],
+        "secondary": [64]
+      },
+      "rule": {
+        "type": "power_connectors",
+        "primaryField": "powerConnectors",
+        "secondaryField": "availableConnectors",
+        "message": "ספק הכוח חסר מחברי חשמל נדרשים לכרטיס המסך ({primaryValue})"
+      }
+    },
+    {
+      "id": "case_motherboard_formfactor",
+      "name": "Case-Motherboard Form Factor",
+      "description": "Case must support motherboard form factor",
+      "severity": "error",
+      "categories": {
+        "primary": [95],
+        "secondary": [17]
+      },
+      "rule": {
+        "type": "array_contains",
+        "primaryField": "supportedFormFactors",
+        "secondaryField": "formFactor",
+        "message": "המארז אינו תומך בגודל לוח האם ({secondaryValue})"
+      }
+    },
+    {
+      "id": "case_gpu_length",
+      "name": "Case GPU Length Clearance",
+      "description": "GPU length must fit in case",
+      "severity": "warning",
+      "categories": {
+        "primary": [95],
+        "secondary": [82]
+      },
+      "rule": {
+        "type": "max_value",
+        "primaryField": "maxGPULength",
+        "secondaryField": "length",
+        "message": "כרטיס המסך ({secondaryValue}mm) ארוך מדי למארז (מקסימום {primaryValue}mm)"
+      }
+    },
+    {
+      "id": "case_cpu_cooler_height",
+      "name": "Case CPU Cooler Height Clearance",
+      "description": "CPU cooler height must fit in case",
+      "severity": "warning",
+      "categories": {
+        "primary": [95],
+        "secondary": [34, 40]
+      },
+      "rule": {
+        "type": "max_value",
+        "primaryField": "maxCoolerHeight",
+        "secondaryField": "height",
+        "message": "מקרר המעבד ({secondaryValue}mm) גבוה מדי למארז (מקסימום {primaryValue}mm)"
+      }
+    },
+    {
+      "id": "motherboard_m2_slots",
+      "name": "M.2 SSD Slot Availability",
+      "description": "Motherboard must have enough M.2 slots for SSDs",
+      "severity": "warning",
+      "categories": {
+        "primary": [17],
+        "secondary": [172]
+      },
+      "rule": {
+        "type": "slot_count",
+        "primaryField": "m2Slots",
+        "secondaryField": "interface",
+        "secondaryValue": "M.2",
+        "message": "לוח האם יש רק {primaryValue} חריצי M.2, אך נבחרו {secondaryCount} כונני M.2"
+      }
+    },
+    {
+      "id": "motherboard_sata_ports",
+      "name": "SATA Port Availability",
+      "description": "Motherboard must have enough SATA ports",
+      "severity": "warning",
+      "categories": {
+        "primary": [17],
+        "secondary": [48, 172, 74]
+      },
+      "rule": {
+        "type": "slot_count",
+        "primaryField": "sataPorts",
+        "secondaryField": "interface",
+        "secondaryValue": "SATA",
+        "message": "לוח האם יש רק {primaryValue} יציאות SATA, אך נבחרו {secondaryCount} רכיבי SATA"
+      }
+    },
+    {
+      "id": "intel_amd_exclusive",
+      "name": "Intel/AMD CPU Exclusivity",
+      "description": "Cannot select both Intel and AMD CPUs",
+      "severity": "error",
+      "categories": {
+        "primary": [32],
+        "secondary": [33]
+      },
+      "rule": {
+        "type": "mutually_exclusive",
+        "message": "לא ניתן לבחור גם מעבד Intel וגם מעבד AMD"
+      }
+    },
+    {
+      "id": "air_liquid_cooling_exclusive",
+      "name": "Air/Liquid Cooling Exclusivity",
+      "description": "Choose either air or liquid cooling, not both",
+      "severity": "warning",
+      "categories": {
+        "primary": [34],
+        "secondary": [40]
+      },
+      "rule": {
+        "type": "mutually_exclusive",
+        "message": "נבחר גם קירור אוויר וגם קירור נוזלי. מומלץ לבחור רק אחד."
+      }
+    },
+    {
+      "id": "ram_dual_channel",
+      "name": "RAM Dual Channel Recommendation",
+      "description": "Recommend using RAM in pairs for dual channel",
+      "severity": "info",
+      "categories": {
+        "primary": [169],
+        "secondary": null
+      },
+      "rule": {
+        "type": "count_recommendation",
+        "preferredCounts": [2, 4],
+        "message": "מומלץ להשתמש בזיכרון בזוגות (2 או 4 מודולים) לביצועים אופטימליים"
+      }
+    },
+    {
+      "id": "nvme_pcie_gen",
+      "name": "NVMe PCIe Generation",
+      "description": "NVMe SSD PCIe generation should match or be lower than motherboard",
+      "severity": "info",
+      "categories": {
+        "primary": [172],
+        "secondary": [17]
+      },
+      "rule": {
+        "type": "max_value",
+        "primaryField": "pcieGen",
+        "secondaryField": "maxPcieGen",
+        "message": "כונן ה-SSD תומך ב-PCIe Gen {primaryValue}, אך לוח האם תומך רק ב-Gen {secondaryValue}. הכונן יפעל במהירות נמוכה יותר."
+      }
+    }
+  ],
+  "fieldMappings": {
+    "socket": {
+      "aliases": ["Socket", "cpu_socket", "socketType"],
+      "description": "CPU/Motherboard socket type",
+      "examples": ["LGA 1700", "AM5", "AM4", "LGA 1200"]
+    },
+    "memoryType": {
+      "aliases": ["memory_type", "ramType", "ddr"],
+      "description": "RAM type",
+      "examples": ["DDR5", "DDR4", "DDR3"]
+    },
+    "memorySpeed": {
+      "aliases": ["memory_speed", "ramSpeed", "frequency"],
+      "description": "RAM speed in MHz",
+      "examples": [3200, 3600, 4800, 5200]
+    },
+    "formFactor": {
+      "aliases": ["form_factor", "size"],
+      "description": "Motherboard/Case form factor",
+      "examples": ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"]
+    },
+    "wattage": {
+      "aliases": ["power", "watts"],
+      "description": "PSU wattage in watts",
+      "examples": [550, 650, 750, 850, 1000]
+    },
+    "tdp": {
+      "aliases": ["TDP", "power_consumption"],
+      "description": "Component power consumption in watts",
+      "examples": [65, 95, 125, 150, 250]
+    },
+    "supportedSockets": {
+      "aliases": ["compatible_sockets", "sockets"],
+      "description": "Array of supported CPU sockets",
+      "examples": [["LGA 1700", "LGA 1200"], ["AM5", "AM4"]]
+    },
+    "supportedFormFactors": {
+      "aliases": ["compatible_form_factors"],
+      "description": "Array of supported motherboard form factors",
+      "examples": [["ATX", "Micro-ATX", "Mini-ITX"]]
+    }
+  },
+  "severityLevels": {
+    "error": {
+      "label": "שגיאה",
+      "color": "#dc3545",
+      "icon": "❌",
+      "blockAddToCart": true
+    },
+    "warning": {
+      "label": "אזהרה",
+      "color": "#ffc107",
+      "icon": "⚠️",
+      "blockAddToCart": false
+    },
+    "info": {
+      "label": "מידע",
+      "color": "#17a2b8",
+      "icon": "ℹ️",
+      "blockAddToCart": false
+    }
+  }
+}

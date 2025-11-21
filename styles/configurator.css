@@ -689,6 +689,11 @@
   color: #856404;
 }
 
+.validation-message--info {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
 .validation-message__icon {
   flex-shrink: 0;
 }

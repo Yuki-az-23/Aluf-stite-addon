@@ -6,6 +6,8 @@
 
 import { CONFIG, EVENTS, DEFAULT_CONFIG, CONFIG_STATES, STORAGE_KEYS } from './constants.js';
 import { deepClone, generateId, log, Storage } from './utils.js';
+import compatibilityChecker from './compatibility-checker.js';
+import specParser from './spec-parser.js';
 
 /**
  * StateManager - Singleton class for managing application state
@@ -252,9 +254,13 @@ class StateManager {
       return;
     }
 
+    // Parse and enhance product specifications
+    const productWithSpecs = deepClone(product);
+    productWithSpecs.specifications = specParser.parseByCategory(product, categoryId);
+
     // Create selected product object
     const selectedProduct = {
-      product: deepClone(product),
+      product: productWithSpecs,
       categoryId,
       quantity,
       lineTotal: product.price * quantity,
@@ -389,7 +395,8 @@ class StateManager {
     const validation = {
       missingRequired: [],
       compatibilityIssues: [],
-      warnings: []
+      warnings: [],
+      info: []
     };
 
     // Check required categories
@@ -410,15 +417,39 @@ class StateManager {
           category.mutuallyExclusive.forEach(exclusiveId => {
             const hasExclusive = config.selectedProducts.some(p => p.categoryId === exclusiveId);
             if (hasExclusive) {
-              validation.warnings.push(`Cannot have both ${category.displayName} and category ${exclusiveId}`);
+              const exclusiveCategory = this.state.categories.find(c => c.id === exclusiveId);
+              validation.warnings.push({
+                message: `Cannot have both ${category.displayName} and ${exclusiveCategory?.displayName || exclusiveId}`,
+                severity: 'warning'
+              });
             }
           });
         }
       }
     });
 
-    // Add compatibility checks here (CPU socket, RAM type, etc.)
-    // This would require product specifications data
+    // Run compatibility checker if loaded
+    if (compatibilityChecker.loaded) {
+      const compatibilityIssues = compatibilityChecker.checkConfiguration(
+        config,
+        this.state.categories
+      );
+
+      // Add compatibility errors
+      if (compatibilityIssues.errors) {
+        validation.compatibilityIssues.push(...compatibilityIssues.errors);
+      }
+
+      // Add compatibility warnings
+      if (compatibilityIssues.warnings) {
+        validation.warnings.push(...compatibilityIssues.warnings);
+      }
+
+      // Add compatibility info
+      if (compatibilityIssues.info) {
+        validation.info.push(...compatibilityIssues.info);
+      }
+    }
 
     return validation;
   }

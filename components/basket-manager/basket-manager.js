@@ -237,18 +237,32 @@ class BasketManager {
       });
     }
 
-    // Show compatibility issues
+    // Show compatibility errors
     if (validation.compatibilityIssues && validation.compatibilityIssues.length > 0) {
       validation.compatibilityIssues.forEach(issue => {
-        const messageEl = this.createValidationMessage(issue.message, 'error');
+        const message = typeof issue === 'string' ? issue : issue.message;
+        const severity = typeof issue === 'object' ? issue.severity : 'error';
+        const messageEl = this.createValidationMessage(message, severity);
         this.validationEl.appendChild(messageEl);
       });
     }
 
-    // Show warnings
+    // Show warnings (both category-based and compatibility)
     if (validation.warnings && validation.warnings.length > 0) {
       validation.warnings.forEach(warning => {
-        const messageEl = this.createValidationMessage(warning, 'warning');
+        const message = typeof warning === 'string' ? warning : warning.message;
+        const severity = typeof warning === 'object' ? warning.severity : 'warning';
+        const messageEl = this.createValidationMessage(message, severity);
+        this.validationEl.appendChild(messageEl);
+      });
+    }
+
+    // Show info messages
+    if (validation.info && validation.info.length > 0) {
+      validation.info.forEach(info => {
+        const message = typeof info === 'string' ? info : info.message;
+        const severity = typeof info === 'object' ? info.severity : 'info';
+        const messageEl = this.createValidationMessage(message, severity);
         this.validationEl.appendChild(messageEl);
       });
     }

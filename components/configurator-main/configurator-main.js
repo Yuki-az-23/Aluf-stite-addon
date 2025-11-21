@@ -6,6 +6,7 @@
 
 import stateManager from '../shared/state-manager.js';
 import KonimboAPI from '../../integration/konimbo-api.js';
+import compatibilityChecker from '../shared/compatibility-checker.js';
 import CategorySelector from '../category-selector/category-selector.js';
 import ProductModal from '../product-modal/product-modal.js';
 import BasketManager from '../basket-manager/basket-manager.js';
@@ -184,6 +185,14 @@ class PCConfigurator {
 
       // Set categories in state
       stateManager.setCategories(categories);
+
+      // Load compatibility rules
+      const rulesPath = this.options.compatibilityRulesPath ||
+        '/files/configurator/config/compatibility-rules.json';
+
+      await compatibilityChecker.loadRules(rulesPath).catch(error => {
+        log.warn('Compatibility rules not loaded, compatibility checking disabled', error);
+      });
 
       // Initialize new configuration if needed
       const currentConfig = stateManager.getState().currentConfiguration;

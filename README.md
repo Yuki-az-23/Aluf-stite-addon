@@ -54,11 +54,12 @@ This configurator enables customers to:
 - **Responsive Design**: Mobile-friendly interface
 - **RTL Support**: Full Hebrew/RTL language support
 
-### Advanced Features (Optional)
-- **Compatibility Checking**: Validate component compatibility
-- **Saved Configurations**: Save and load configurations
-- **Share Configurations**: Generate shareable links
-- **Price Comparison**: Compare similar components
+### Advanced Features
+- **Automatic Compatibility Checking**: Validates CPU/motherboard socket, RAM type, PSU wattage, physical clearances, and more
+- **Smart Specification Parsing**: Automatically extracts component specs from product data
+- **Multi-level Validation**: Errors (blocks cart), warnings, and info messages
+- **Saved Configurations**: Save and load configurations (ready for implementation)
+- **Share Configurations**: Generate shareable links (ready for implementation)
 
 ## Technology Stack
 
